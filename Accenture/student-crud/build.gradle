@@ -1,0 +1,61 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.5'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'acc.br'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springCloudVersion', "2023.0.3")
+}
+
+dependencies {
+	// Web e DevTools
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	
+	// Persistência e Banco de Dados (H2)
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.h2database:h2'
+	
+	// Consumo de API Externa (Feign)
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	
+	// Documentação Swagger (Opcional, mas ajuda muito)
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+	// Lombok para diminuir código repetitivo (Getters/Setters)
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
